@@ -1,9 +1,19 @@
 const express = require('express')
+const fs = require('fs');
 const app = express()
 const port = process.env.PORT || 3000
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
+const pixel = fs.readFileSync(__dirname + '/pixel.gif');
+const pixelHeaders = {
+    'Cache-Control': 'private, no-cache, proxy-revalidate, max-age=0',
+    'Content-Type': 'image/gif',
+    'Content-Disposition': 'inline',
+    'Content-Length': pixel.length
+};
+
+app.get('/pixel.gif', (req, res) => {
+    res.set(pixelHeaders)
+    res.status(200).send(pixel)
 })
 
 app.listen(port, () => {
